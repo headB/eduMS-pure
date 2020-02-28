@@ -1,0 +1,131 @@
+<title>trainsubject管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb"/>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-trainsubject-formlist">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">关键字</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="keyword" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-trainsubject-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <table id="LAY-trainsubject-manage" lay-filter="LAY-trainsubject-manage"></table>
+            <script type="text/html" id="trainsubject-list-manage-btn">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+            <script type="text/html" id="trainsubject-table-manage-btn">
+                <a class="layui-btn layui-btn-xs table-manage-btn" data-type="add">创建</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs table-manage-btn" data-type="batchdel">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use('trainsubject', layui.factory('trainsubject')).use(['admin', 'layer', 'trainsubject', 'table'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , view = layui.view
+            , table = layui.table
+            , layer = layui.layer
+            , form = layui.form;
+
+        form.render(null, 'layadmin-trainsubject-formlist');
+
+        //监听搜索
+        form.on('submit(LAY-trainsubject-front-search)', function (data) {
+            var field = data.field;
+
+            //执行重载
+            table.reload('LAY-trainsubject-manage', {
+                where: field
+            });
+        });
+
+        //事件
+        var active = {
+            batchdel: function () {
+                var checkStatus = table.checkStatus('LAY-trainsubject-manage')
+                    , checkData = checkStatus.data; //得到选中的数据
+
+                if (checkData.length === 0) {
+                    return layer.msg('请选择数据');
+                }
+
+                layer.confirm('确定删除吗？', function (index) {
+                    var ids = $.map(checkData, function (v, i) {
+                        return v.id
+                    });
+                    //执行 Ajax 后重载
+                    admin.req({
+                        url: '/trainsubjects',
+                        type: 'delete',
+                        data: {ids: ids},
+                        done: function (e) {
+                            layer.msg(e.msg);
+                            if (e.code === 0) {
+                                setTimeout(function () {
+                                    layui.table.reload("LAY-trainsubject-manage"), layer.close(index)
+                                }, 1000);
+                            }
+                        }
+                    });
+                });
+            }
+            , add: function () {
+                admin.popup({
+                    title: '添加'
+                    , area: ['500px', '450px']
+                    , id: 'LAY-popup-trainsubject-add'
+                    , success: function (layero, index) {
+                        view(this.id).render('system/trainsubject/form').done(function () {
+                            form.render(null, 'layadmin-trainsubject-formlist');
+
+                            //监听提交
+                            form.on('submit(LAY-trainsubject-front-submit)', function (data) {
+                                // 提交数据到后台
+                                admin.req({
+                                    url: '/trainsubjects',
+                                    type: 'post',
+                                    data: data.field,
+                                    done: function (e) {
+                                        layer.msg(e.msg);
+                                        if (e.code === 0) {
+                                            setTimeout(function () {
+                                                layui.table.reload("LAY-trainsubject-manage"), layer.close(index)
+                                            }, 1000);
+                                        }
+                                    }
+                                });
+
+                                return false;
+                            });
+                        });
+                    }
+                });
+            }
+        };
+
+        $('.table-manage-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>

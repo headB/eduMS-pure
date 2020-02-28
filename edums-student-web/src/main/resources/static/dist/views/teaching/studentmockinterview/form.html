@@ -1,0 +1,133 @@
+<title>模拟面试管理</title>
+
+<form class="layui-form" lay-filter="layadmin-studentMockInterview-formlist">
+    <input type="hidden" name="id">
+    <div class="layui-row">
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">学员</label>
+                <div class="layui-input-block">
+                    <div id="f_studentId" class="xm-select-demo"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">学科</label>
+                <div class="layui-input-block">
+                    <select id="f_subjectId" name="subjectId" lay-search lay-filter="f_subjectId">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">班级</label>
+                <div class="layui-input-block">
+                    <select id="f_classinfoId" name="classinfoId" lay-search>
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">面试阶段</label>
+                <div class="layui-input-block">
+                    <input type="text" name="stage" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">面试老师</label>
+                <div class="layui-input-block">
+                    <input type="text" name="teacher" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">面试内容</label>
+        <div class="layui-input-block">
+            <textarea type="text" name="content" placeholder="请输入" autocomplete="off"
+                      class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">表达能力</label>
+                <div class="layui-input-block">
+                    <input type="text" name="expressionScore" placeholder="请输入分数" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">基础知识</label>
+                <div class="layui-input-block">
+                    <input type="text" name="basicScore" placeholder="请输入分数" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">分布式</label>
+                <div class="layui-input-block">
+                    <input type="text" name="distributionScore" placeholder="请输入分数" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目熟悉</label>
+                <div class="layui-input-block">
+                    <input type="text" name="projectScore" placeholder="请输入分数" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">综合分数</label>
+                <div class="layui-input-block">
+                    <input type="text" name="compositeScore" placeholder="请输入分数" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否通过</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="canPass" lay-skin="switch" lay-text="是|否">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">老师点评</label>
+        <div class="layui-input-block">
+            <textarea type="text" name="teacherComment" placeholder="请输入" autocomplete="off"
+                      class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="LAY-studentMockInterview-front-submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,237 @@
+<title>学员就业管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb"/>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+
+        <div id="view"></div>
+
+
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-studentGraduates-formlist">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">学生</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="keyword" placeholder="姓名/电话/qq" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">学科</label>
+                    <div class="layui-input-block">
+                        <select id="subjectId" name="subjectId" lay-filter="subjectId">
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">班级</label>
+                    <div class="layui-input-block">
+                        <select id="classinfoId" name="classinfoId" lay-search>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-studentGraduates-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <table id="LAY-studentGraduates-manage" lay-filter="LAY-studentGraduates-manage"></table>
+            <script type="text/html" id="studentGraduates-list-manage-btn">
+                <a  class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>详情</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+            <script type="text/html" id="studentGraduates-table-manage-btn">
+                <a  class="layui-btn layui-btn-xs table-manage-btn" lay-event="add" >创建</a>
+                <a  class="layui-btn layui-btn-danger layui-btn-xs table-manage-btn" lay-event="batchdel">删除</a>
+            </script>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    layui.use('studentGraduates', layui.factory('studentGraduates')).use(['admin', 'layer', 'studentGraduates', 'table','laytpl'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            view = layui.view,
+            table = layui.table,
+            layer = layui.layer,
+            form = layui.form,
+            laytpl = layui.laytpl;
+
+        //查询统计数据
+        getStatistic();
+
+
+        form.render(null, 'layadmin-studentGraduates-formlist');
+
+        //监听搜索
+        form.on('submit(LAY-studentGraduates-front-search)', function (data) {
+            var field = data.field;
+
+            //执行重载
+            table.reload('LAY-studentGraduates-manage', {
+                where: field
+            });
+
+            //统计数据重载
+            getStatistic();
+        });
+
+
+        //监听选择
+        form.on('select(subjectId)', function(data){
+            var subjectId= data.value;
+            admin.req({ //班级
+                url: '/classinfos?size=-1&subjectId='+subjectId,
+                done: function (res) {
+                    var options = '<option value="">请选择</option>';
+                    if (res.data && res.data.length) {
+                        $.each(res.data, function (i, e) {
+                            options += "<option value='" + e.id + "'>" + e.title + "</option>";
+                        });
+                    }
+                    $("#classinfoId").html(options);
+                    form.render("select", "layadmin-studentGraduates-formlist")
+                }
+            });
+        });
+
+        admin.req({ //学科
+            url: '/trainsubjects?type=all',
+            done: function (res) {
+                if (res.data && res.data.length) {
+                    var options = '<option value="">请选择</option>';
+                    $.each(res.data, function (i, e) {
+                        options += "<option value='" + e.id + "'>" + e.name + "</option>";
+                    });
+                    $("#subjectId").append(options);
+                    form.render("select", "layadmin-studentGraduates-formlist")
+                    window.subjects = options;
+                }
+            }
+        });
+
+        // 渲染 select
+        admin.req({ //班级
+            url: '/classinfos?type=all',
+            done: function (res) {
+                if (res.data && res.data.length) {
+                    var options = '<option value="">请选择</option>';
+                    $.each(res.data, function (i, e) {
+                        options += "<option value='" + e.id + "'>" + e.title + "</option>";
+                    });
+                    $("#classinfoId").append(options);
+                    form.render("select", "layadmin-studentGraduates-formlist")
+                    window.classinfos = options;
+                }
+            }
+        });
+
+        admin.req({ //在校表现
+            url: '/dictionary/details?sn=studentPerformance',
+            done: function (res) {
+                if (res.data && res.data.length) {
+                    var options = '<option value="">请选择</option>';
+                    $.each(res.data, function (i, e) {
+                        options += "<option value='" + e.id + "'>" + e.title + "</option>";
+                    });
+                    window.performances = options;
+
+                }
+            }
+        });
+
+
+        function getStatistic(){
+            var data = form.val('layadmin-studentGraduates-formlist');
+            //查询统计数据
+            admin.req({ //班级
+                url: '/charts/studentGraduates/statistic',
+                data: data,
+                done: function (res) {
+                    if (res.data) {
+                        var getTpl = demo.innerHTML,view = document.getElementById('view');
+                        laytpl(getTpl).render(res.data, function(html){
+                            view.innerHTML = html;
+                        });
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+<script id="demo" type="text/html">
+    <div class="layui-row layui-col-space15 layui-bg-gray">
+        <div class="layui-col-sm6 layui-col-md2">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    毕业学员数
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+                    <p class="layuiadmin-big-font">{{d.graduatesNum}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md2">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    就业数
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+                    <p class="layuiadmin-big-font">{{d.jobNum}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md2">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    未就业数
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+                    <p class="layuiadmin-big-font">{{d.unjobNum}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md2">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    就业率
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+                    <p class="layuiadmin-big-font">{{d.jobRate}}%</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md2">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    最高薪资
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+                    <p class="layuiadmin-big-font">{{d.maxSalary}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-sm6 layui-col-md2">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    平均薪资
+                </div>
+                <div class="layui-card-body layuiadmin-card-list">
+                    <p class="layuiadmin-big-font">{{d.avgSalary}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

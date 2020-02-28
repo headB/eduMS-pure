@@ -1,0 +1,426 @@
+<div class="layui-fluid layui-bg-white">
+
+    <title>就业情况查看</title>
+
+    <form class="layui-form" lay-filter="layadmin-studentGraduates-formlist" id="editForm" enctype="multipart/form-data">
+        <input type="hidden" name="id"/>
+        <div class="layui-row">
+            <div class="layui-col-md4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">学员</label>
+                    <div class="layui-input-block">
+                        <div id="f_studentId" class="xm-select-demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">所属学科</label>
+                    <div class="layui-input-block">
+                        <select id="f_subjectId" name="subjectId" lay-search lay-filter="f_subjectId">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">所在班级</label>
+                    <div class="layui-input-block">
+                        <select id="f_classinfoId" name="classinfoId" lay-search>
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">在校表现</label>
+                    <div class="layui-input-block">
+                        <select id="f_performanceId" name="performanceId">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">就业状态</label>
+                    <div class="layui-input-block">
+                        <select name="status">
+                            <option value="0">面试中</option>
+                            <option value="1">已就业</option>
+                            <option value="2">已转行</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">就业类型</label>
+                    <div class="layui-input-block">
+                        <select name="type">
+                            <option value="">请选择</option>
+                            <option value="0">社招</option>
+                            <option value="1">校招</option>
+                            <option value="2">创业</option>
+                            <option value="3">推荐</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-row">
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">毕业时间</label>
+                        <div class="layui-input-block">
+                            <input id="graduateDate" type="text" name="graduateDate" placeholder="请输入"
+                                   autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">工作时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="workDate" name="workDate" placeholder="请输入" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">期望城市</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="expectCity" placeholder="请输入" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">面试定薪</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="mockSalary" placeholder="请输入" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">就业薪资</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="salary" placeholder="请输入" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">公司名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="companyName" placeholder="请输入" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">公司城市</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="companyCity" placeholder="请输入" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">就职岗位</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="job" placeholder="请输入" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+            <textarea type="text" name="remark" placeholder="请输入"
+                      class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">简历附件</label>
+                <div class="layui-input-block">
+
+                    <span id="noresumeMsg">暂无简历可下载</span>
+                    <a hidden style="color: green;text-decoration:underline; cursor:pointer"
+                       id="downloadResume">已有简历可下载</a>
+                    <input type="hidden" name="resume"/>
+                </div>
+                <div class="layui-input-block">
+                    <input type="file" name="file" id="resumeFile"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="LAY-studentGraduates-front-submit">立即提交</button>
+                    <!--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">模拟面试</li>
+            <li>面试详情</li>
+            <li>工作信息</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <table id="mockInterview" lay-filter="mockInterview"></table>
+            </div>
+            <div class="layui-tab-item">
+                <table id="interview" lay-filter="interview"></table>
+            </div>
+            <div class="layui-tab-item">
+                <table id="job" lay-filter="job"></table>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script>
+
+    layui.use(['laydate', 'form', 'table', 'common', 'xmSelect', 'upload'], function () {
+
+        var $ = layui.$
+            , laydate = layui.laydate
+            , form = layui.form
+            , table = layui.table
+            , upload = layui.upload
+            , xmSelect = layui.xmSelect
+            , common = layui.common
+            , admin = layui.admin, token = layui.data(layui.setter.tableName)[layui.setter.request.tokenName];
+
+        laydate.render({
+            elem: '#graduateDate'
+        });
+        laydate.render({
+            elem: '#workDate'
+        });
+
+
+        //监听选择
+        form.on('select(f_subjectId)', function (data) {
+            var subjectId = data.value;
+            admin.req({ //班级
+                url: '/classinfos?size=-1&subjectId=' + subjectId,
+                done: function (res) {
+                    var options = '<option value="">请选择</option>';
+                    if (res.data && res.data.length) {
+                        $.each(res.data, function (i, e) {
+                            options += "<option value='" + e.id + "'>" + e.title + "</option>";
+                        });
+                    }
+                    $("#f_classinfoId").html(options);
+                    form.render("select", "layadmin-studentGraduates-formlist")
+                }
+            });
+        });
+
+        //回显数据
+        var obj = window.studentGraduates;
+        initForm(obj);
+
+
+        if (obj) {
+            if (obj.resume) {
+                $("#downloadResume").show();
+                $("#noresumeMsg").hide();
+                $("#downloadResume").attr('href', obj.resume);
+            }
+
+
+            //查询模拟面试
+            table.render({
+                elem: '#mockInterview'
+                , url: '/studentMockInterviews?type=all&studentId=' + obj.studentId //数据接口
+                , headers: {'x-auth-token': token}
+                , height: 'full-100'
+                , cols: [[ //表头
+                    {field: 'interviewTime', title: '面试时间', width: 110}
+                    , {field: 'stage', title: '面试阶段'}
+                    , {field: 'content', title: '面试内容'}
+                    , {field: 'expressionScore', title: '表达分数'}
+                    , {field: 'basicScore', title: '基础知识分数'}
+                    , {field: 'distributionScore', title: '分布式分数'}
+                    , {field: 'projectScore', title: '项目熟悉分数'}
+                    , {field: 'compositeScore', title: '综合分数'}
+                    , {
+                        field: 'canPass', title: '是否通过', templet: function (row) {
+                            return common.genYesOrNoTag(!row.canPass, '否', '是');
+                        }
+                    }
+                    , {field: 'teacher', title: '面试老师'}
+                    , {field: 'teacherComment', title: '老师点评'}
+
+                ]]
+            });
+
+            //查询工作情况
+            table.render({
+                elem: '#job'
+                , url: '/studentJobs?type=all&studentId=' + obj.studentId //数据接口
+                , headers: {'x-auth-token': token}
+                , height: 'full-100',
+                cols: [[
+                    {field: "companyName", title: "公司名称"},
+                    {field: "companyCity", title: "公司城市"},
+                    {field: "companyBusiness", title: "公司行业"},
+                    {field: "companyScale", title: "公司规模"},
+                    {field: "companyNature", title: "公司性质"},
+                    {field: "workDate", title: "工作时间"},
+                    {field: "status", title: "状态", templet: function (row) {
+                            return common.genYesOrNoTag(row.status < 0, '离职', '在职');
+                        }},
+                    {field: "resignationDate", title: "离职时间"},
+                    {field: "resignationReason", title: "离职原因"}
+                ]],
+            });
+        }
+
+        function initForm(data) {
+            $("#f_performanceId").html(window.performances);
+            $("#f_subjectId").html(window.subjects);
+            $("#f_classinfoId").html(window.classinfos);
+            var option = [];
+            var type = "post";
+            if (data) {
+                option = [{
+                    name: data.studentName,
+                    value: data.studentId,
+                    selected: true
+                }];
+                type = "put";
+                // 数据回显
+                form.val("layadmin-studentGraduates-formlist", data);
+            }
+            //学员下拉框
+            xmSelect.render({
+                el: '#f_studentId',
+                filterable: true,
+                remoteSearch: true,
+                radio: true,
+                clickClose: true,
+                name: 'studentId',
+                model: {
+                    label: {
+                        type: 'text',
+                        text: {
+                            //左边拼接的字符
+                            left: '',
+                            //右边拼接的字符
+                            right: '',
+                            //中间的分隔符
+                            separator: ', ',
+                        },
+                    }
+                },
+                data: option,
+                remoteMethod: function (val, cb, show) { //远程模糊查询
+                    //判断是否中文
+                    var pattern = new RegExp("[\u4E00-\u9FA5]+");
+                    if (pattern.test(val)) {
+                        admin.req({
+                            url: '/students?size=-1&trueName=' + val,
+                            done: function (res) {
+                                var options = ''
+                                if (res.data && res.data.length) {
+                                    var arr = [];
+                                    $.each(res.data, function (i, e) {
+                                        arr[i] = {
+                                            name: e.trueName,
+                                            value: e.id
+                                        }
+                                    });
+                                    cb(arr)
+                                }
+                            }
+                        });
+                    } else {
+                        cb([])
+                    }
+
+                }
+            })
+            // 重新渲染页面
+            form.render(null, "layadmin-studentGraduates-formlist");
+
+            // 绑定提交表单事件
+            /*form.on("submit(LAY-studentGraduates-front-submit)", function (e) {
+                // 提交数据到后台
+                admin.req({
+                    url: '/studentGraduatess',
+                    type: type,
+                    data: e.field,
+                    processData: false,
+                    contentType: false,
+                    done: function (e) {
+                        layer.msg(e.msg);
+                        if (e.code === 0) {
+                            setTimeout(function () {
+                                layui.table.reload("LAY-studentGraduates-manage")
+                            }, 1000);
+                        }
+                    }
+                });
+                return false;
+            });*/
+            form.on("submit(LAY-studentGraduates-front-submit)", function (e) {
+                var dataField = new FormData($("#editForm")[0]);
+                /**
+                 *  使用ajax提交form表单的上传文件，
+                 *  首先要使用FormData的获取表单的上次文件数据，
+                 */
+                $.ajax({
+                    url: '/studentGraduatess',
+                    type: type,
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    headers: {'x-auth-token': token},
+                    data:  dataField,
+                    success: function (e) {
+                        layer.msg(e.msg);
+                        if (e.code === 0) {
+                            if (e.data.resume) {
+                                $("#downloadResume").show();
+                                $("#noresumeMsg").hide();
+                                $("#downloadResume").attr('href', e.data.resume);
+                            }
+                        }
+                    }
+
+                });
+                return false;
+            });
+        }
+
+    })
+</script>

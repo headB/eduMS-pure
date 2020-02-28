@@ -1,0 +1,329 @@
+<title>estimate form</title>
+
+
+
+
+
+<form class="layui-form" id="estimate" lay-filter="layadmin-estimate-formlist">
+
+    <input type="hidden" name="id">
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">学科选择</label>
+        <div class="layui-input-block">
+            <select id="f_subjectId" lay-filter="f_subjectId_type"   name="subjectId" class="layui-input" lay-verify="required"  lay-search="">
+                <option value="">直接选择或搜索选择</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">老师类型</label>
+        <div class="layui-input-block">
+            <select id="f_type" name="type" class="layui-input" lay-filter="f_type" lay-verify="required"  lay-search="">
+                <option value="">直接选择或搜索选择</option>
+                <option value="0">没有选对应的类型</option>
+                <option value="1">讲师</option>
+                <option value="2">班主任</option>
+                <option value="3">辅导员</option>
+                <option value="4">学习反馈</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item teacherId" >
+        <label class="layui-form-label">评分老师</label>
+        <div class="layui-input-block">
+
+
+            <select id="f_teacherId" name="teacherId" lay-filter="f_teacherId" class="layui-input" lay-verify="required"  lay-search="">
+                <option value="">(被评分的老师)直接选择或搜索选择</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">评分模板</label>
+        <div class="layui-input-block">
+
+
+            <select id="f_customId" name="customId" lay-filter="f_customId" class="layui-input" lay-verify="required"  lay-search="">
+                <option value="">直接选择或搜索选择</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">班级名字</label>
+        <div class="layui-input-block">
+
+            <select id="f_subjectDetailId" lay-filter="f_subjectDetailId" name="subjectDetailId"  class="layui-input"  lay-verify="required" lay-search="">
+                <option value="">直接选择或搜索选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">实际班名</label>
+        <div class="layui-input-block">
+            <input type="text" id="act_name"  name="className" placeholder="例如:41期java大神班" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">评价人数</label>
+        <div class="layui-input-block">
+            <input type="text" name="total" placeholder="仅仅用于参考，不纳入计算" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <input type="text" name="remark" placeholder="输入你想输入的备注，whatever you like" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="LAY-estimate-front-submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+
+
+<script type="text/javascript" >
+
+    var teacher_type = "";
+    window.lastSelectTeacher = '';
+
+    //全局班级数据。
+    var estimate_class_data = '';
+
+    layui.use(['laydate','admin','form' ], function() {
+
+        var $ = layui.$
+            , laydate = layui.laydate
+            , form = layui.form
+            , admin = layui.admin;
+
+        laydate.render({
+            elem: '#expiredTime',
+            type:'datetime',
+
+        });
+
+        // form.render("select","layadmin-estimate-formlist");
+
+        $("#f_teacherId").append(window.employees);
+        $("#f_subjectId").append(window.subjects_type);
+        $("#f_subjectDetailId").append(window.subjectDetails);
+
+        //监听 学科类型  下拉类型  选择好了之后就可以填充讲师们的数据，还有班级们的数据
+        form.on('select(f_subjectId_type)',function(data){
+
+            var others = false;
+           // OK！总算可以控制，监听你了。
+
+           if(data.value){
+                teacher_type = 1;
+               //execEmployee("deptId=32768")
+
+               //查询对应学科的全部讲师 (产品名字）
+               admin.req({
+
+                   url:'/estimates/types/'+data.value,
+                   done:function (res) {
+
+                       $("#f_teacherId").html("");
+                       if(res.data && res.data[0]!=null){
+
+                           if (!select_option_default){
+                               var select_option_default = window.select_option_default;
+                           }
+
+                           var options = select_option_default;
+                           $.each(res.data,function (i,e) {
+
+                               options += "<option value='" + e.empId + "'>" + e.empName + "</option>";
+
+                           });
+
+                           $("#f_teacherId").append(options);
+
+
+                           window.lastSelectTeacher = options;
+                       }
+                       form.render("select","layadmin-estimate-formlist");
+
+                   }
+
+               });
+
+               //查询对应这个中分类下所有详细班级
+               admin.req({
+
+                   url:'/classinfos?productId='+data.value,
+                   done:function (res) {
+
+                       $("#f_subjectDetailId").html("");
+                       $("#act_name").val("");
+                       if(res.data && res.data[0]!=null){
+
+                           var options = select_option_default;
+                           var class_data = {};
+                           $.each(res.data,function (i,e) {
+
+                               options += "<option value='" + e.id + "'>" + e.title + "</option>";
+
+                               class_data[e.id] = e.title;
+
+
+                           });
+
+                           $("#f_subjectDetailId").append(options);
+
+                        // 然后把班级数据缓存一份。
+                           estimate_class_data = class_data;
+
+                       }
+                       form.render("select","layadmin-estimate-formlist");
+
+                   }
+
+               });
+
+
+           }else{
+               //什么都不做！
+               execEmployee("size=300")
+           }
+
+            //讲师 32768    -》1
+            //班主任 6      -》2
+            //辅导员 32768  -》3
+
+            if (others == false){
+
+            }
+
+            //之前再监听当前状态是不是 investigation
+            if (window.processing == "investigation"){
+                //随便选一个老师就可以了
+
+            }
+
+        });
+
+        function restoreTeacherList(){
+            $("#f_teacherId").html("");
+            $("#f_teacherId").append(window.lastSelectTeacher);
+
+            form.render("select","layadmin-estimate-formlist");
+        }
+
+        if (window.processing=="investigation"){
+            form.val('layadmin-estimate-formlist',{type:4});
+            setTimeout(function () {
+                form.render(null,"layadmin-estimate-formlist");
+            },500);
+
+
+            //被评选人就随便选择一个就可以了;或者直接隐藏起来就可以了。
+            // layui-form-item
+            $(".teacherId").hide();
+
+            //取消必须输入被评分的老师名字
+            $("#f_teacherId").attr("lay-verify","");
+
+
+        }
+
+
+    //监听 老师类型  下拉类型  最好是如果是班主任，就替换之前默认填充好的讲师数据，
+        form.on('select(f_type)',function(data){
+
+            var others = false;
+            // OK！总算可以控制，监听你了。
+            if(data.value==1){
+                teacher_type = 1;
+               // execEmployee("deptId=32768");
+              restoreTeacherList();
+
+
+            }else if(data.value==2){
+                execEmployee("deptId=6")
+            }else if(data.value==3){
+                // execEmployee("deptId=32768")
+                restoreTeacherList();
+
+            }else{
+                //什么都不做！
+                execEmployee("size=300")
+            }
+
+            //讲师 32768    -》1
+            //班主任 6      -》2
+            //辅导员 32768  -》3
+
+            if (others == false){
+
+            }
+
+            //如果当前状态是 investigation的话，就可以默认选择第四个了。
+            if (window.processing=="investigation"){
+                form.val('layadmin-estimate-formlist',{type:4});
+                setTimeout(function () {
+                    form.render(null,"layadmin-estimate-formlist");
+                },500);}
+
+        });
+
+
+
+
+        //监听一旦选择完了班级之后，建议就利用前端，去除前面的前缀。
+        form.on('select(f_subjectDetailId)',function (data) {
+
+            // console.log(data);
+            if(data.value){
+
+                $("#act_name").val(estimate_class_data[data.value].replace(/(广州|上海|\[).+日/g,'').replace(/(广州|上海).+\]/g,''));
+
+                // setTimeout(function () {
+                //     form.render(null,"layadmin-estimate-formlist");
+                //
+                // },500);
+
+            }
+
+        });
+
+        //加载customs信息
+        if(window.processing=="investigation"){
+            $("#f_customId").append(window.investigation_custom_option);
+
+        }else{
+            $("#f_customId").append(window.currentCustoms);
+        }
+
+
+        setTimeout(function () {
+            form.render(null,"layadmin-estimate-formlist");
+
+        },500);
+        //添加了延迟好像就可以一次性加载数据出来了。！
+
+
+        //form.render("select","f_customId");
+
+
+    });
+
+    </script>

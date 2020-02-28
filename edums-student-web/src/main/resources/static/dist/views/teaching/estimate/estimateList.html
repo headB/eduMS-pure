@@ -1,0 +1,404 @@
+<title>学习情况&老师评分查看</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb"/>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-estimate-formlist1">
+
+
+            <div class="layui-form-item">
+                <table>
+                    <tr>
+                        <td>A.非常满意</td>
+                        <td>B.比较满意</td>
+                        <td>C.基本满意</td>
+                        <td>D.不太满意</td>
+                        <td>E.非常不满意</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>当前已经提交人数:</td>
+                        <td class="submitNumber"></td>
+                        <td>当前班级:</td>
+                        <td class="className"></td>
+                        <td></td>
+                        <td>被评选人:</td>
+                        <td class="teacherName"></td>
+                        <td> </td>
+                        <td> --评分日期:</td>
+                        <td class="estimateDate"></td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+        <div id="estimateList" class="layui-card-body">
+            <!--            <table id="LAY-estimate-manage2" lay-filter="LAY-estimate-manage2"></table>-->
+            <table id="LAY-estimate-manage1" lay-filter="LAY-estimate-manage1"></table>
+            <script type="text/html" id="estimate-list-manage-btn">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="show"><i
+                        class="layui-icon layui-icon-edit"></i>查看</a>
+                <a lay-href="teaching/estimate/estimateList" class="layui-btn layui-btn-normal layui-btn-xs"
+                   lay-event="export"><i
+                        class="layui-icon layui-icon-edit"></i>导出</a>
+            </script>
+            <script type="text/html" id="indexList" >
+                {{ d.LAY_TABLE_INDEX+1 }}
+            </script>
+            <script type="text/html" id="estimate-table-manage-btn">
+                <a class="layui-btn layui-btn-xs table-manage-btn" lay-event="add">创建</a>
+                <!--                <a class="layui-btn layui-btn-danger layui-btn-xs table-manage-btn" lay-event="batchdel">删除</a>-->
+            </script>
+            <div id="forAppendContent"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    #addTd td {
+        padding: 10px;
+
+    }
+
+
+    /* A */
+    .veryGood {
+
+        color: white;
+        background-color: #5FB878;
+
+    }
+
+    /* B */
+    .good {
+        color: white;
+        background-color: #00806d;
+    }
+
+    /* C */
+    .fine {
+        color: white;
+        background-color: #FFB800;
+    }
+
+    /* D */
+    .notGood {
+        color: white;
+        background-color: #80392c;
+    }
+
+    /* E */
+    .bad {
+        color: white;
+        background-color: #FF5722;
+    }
+
+
+</style>
+
+<script>
+
+
+    layui.use('estimate', layui.factory('estimate')).use(['admin', 'layer', 'estimate', 'table'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            view = layui.view,
+            table = layui.table,
+            layer = layui.layer,
+            form = layui.form;
+        token = layui.data(layui.setter.tableName)[layui.setter.request.tokenName];
+
+        if (!window.currentCustomId) {
+            window.currentCustomId = "-1"
+        }
+
+        var content = null;
+
+        var fileName = "学员学习情况调查/讲师评分" ;
+
+        var url = '/estimateCommits/show1?estimateId='+window.currentCustomId;
+        table.render({
+            elem: "#LAY-estimate-manage1",
+            title:fileName,
+            url: url,
+            headers: {'x-auth-token': token},
+            request: {pageName: 'current', limitName: 'size'},
+            parseData: function (e) {
+                // console.log(e);
+                content = e;
+                //尝试拿第一个数组结果里面的班级和评分对象
+                try {
+
+                  var teacherName =   content.data[0]['teacherName'];
+                  var className = content.data[0]['className'];
+                  var estimateDate = content.data[0]['commitTime'];
+
+                  $(".teacherName").html(teacherName);
+                  $(".className").html(className);
+                  $(".estimateDate").html(estimateDate);
+                    // commitTime
+                    fileName = className+"_"+teacherName+"_"+estimateDate;
+
+                }catch (e) {
+
+                }
+
+            },
+            cols: [[]],
+            even:true,
+            // size:'lg',
+            toolbar: '#estimate-table-manage-btn1',
+            defaultToolbar: ['filter', 'exports', {
+                title: '提示' //标题
+                , layEvent: 'LAYTABLE_TIPS' //事件名，用于 toolbar 事件中使用
+                , icon: 'layui-icon-tips' //图标类名
+            }],
+            page: true,
+            limit: 200,
+            height: 'full-300',
+            done:function (e) {
+
+            }
+        });
+
+        var countTime = 0;
+        var doAllTime = true;
+
+        //重新加载table
+         function reloadTable(table,titles,content){
+             var columns = [];
+             var column = [];
+             column.push({title: "序号",type:"numbers"});
+             column.push({field: "studentName", title: "学生名字"});
+             $.each(titles,function (i,e) {
+                 //然后就可以遍历
+                 column.push({title: e,field:'estimateOptions'+i});
+
+             });
+             columns.push(column);
+
+             try {
+                 $.each(content.data,function (i,e) {
+                     $.each(e.estimateOptions,function (i1,e1) {
+                         content.data[i]['estimateOptions'+i1]= e1;
+                     })
+
+                 });
+             }catch (e) {
+                 console.log(e);
+                 console.log("fuck!")
+             }
+
+             table.reload("LAY-estimate-manage1",{url:"",cols:columns,data:content.data,title:fileName});
+
+        }
+
+        // function reloadData(table,content) {
+        //     if(content && content["listTitle"]!="undefined"){
+        //         console.log("stop!");
+        //         countTime = 100;
+        //         //然后就开始整理新的字段了。
+        //         reloadTable(table,content['listTitle'],content);
+        //
+        //     }
+        // }
+
+
+
+        var setInterval1 = setInterval(function () {
+
+            if(content && content["listTitle"]!="undefined"){
+                countTime = 100;
+                //然后就开始整理新的字段了。
+                reloadTable(table,content['listTitle'],content);
+
+            }
+
+            countTime++;
+
+            if (countTime > 100) {
+                clearInterval(setInterval1);
+
+            }
+        },100);
+
+    //需要拿单独的estimateId去查询
+
+
+    form.render(null, 'layadmin-estimate-formlist1');
+
+    //监听搜索
+    // form.on('submit(LAY-estimate-front-search1)', function (data) {
+    //     var field = data.field;
+    //
+    //     //执行重载
+    //     table.reload('LAY-estimate-manage1', {
+    //         where: field
+    //     });
+    // });
+
+    //然后重新刷新表格
+
+    //table.reload("LAY-estimate-manage1", {});
+
+    $(function () {
+        setTimeout(function () {
+
+
+            // 记录提交的总人数
+            var submitNumber = 0;
+
+            if (!window.currentCustomId) {
+                window.currentCustomId = "-1"
+            }
+
+            //查询模板
+            admin.req({
+
+                url: '/estimateCommits/show?estimateId=' + window.currentCustomId,
+                done: function (res) {
+
+
+                    // alert("获取到当前的customId是->"+window.currentCustomId);
+
+                    // $("#LAY-estimate-manage1").html("");
+                    // $("[lay-id='LAY-estimate-manage1']").html("");
+
+                    appendContent = "<table id='addTd' cellspacing=\"0\" cellpadding=\"0\" border=\"0\" class=\"layui-table\"><tbody></tbody>";
+
+                    $("#forAppendContent").append(appendContent);
+
+                    //设置一个基本单位
+                    var globalCount = 1;
+                    appendContent = "<tr><td>序号</td><td>姓名</td>";
+
+
+                    $.each(res.data.listTitle, function (i, e) {
+                        appendContent += "<td>" + e + "</td>";
+                    });
+
+                    appendContent += "</tr>";
+
+                    //$("#addTd").append(appendContent);
+
+                    //appendContent = "";
+
+                    //输出当前提交人数
+                    if (res.data.estimateCommitss.length > 0) {
+                        $(".submitNumber").html(res.data.estimateCommitss.length);
+                    }
+
+                    $.each(res.data.estimateCommitss, function (i, e) {
+
+                        appendContent += "<tr><td>" + globalCount + "</td><td>" + e.studentName + "</td>";
+
+                        $.each(e.estimateOptions, function (i1, e1) {
+                            appendContent += "<td>" + e1 + "</td>"
+                        });
+
+                        appendContent += "</tr>";
+
+                        $("#addTd").append(appendContent);
+
+                        appendContent = "";
+
+                        globalCount++;
+                    });
+
+
+                    contents = $("td");
+
+                    $.each(contents, function (i, e) {
+                        // console.log(i);
+                        // console.log(e);
+                        if ($(e).html() == "A.非常满意") {
+                            $(e).attr("class", "veryGood");
+                        }
+
+                        if ($(e).html() == "B.比较满意") {
+                            $(e).attr("class", "good");
+                        }
+
+                        if ($(e).html() == "C.基本满意") {
+                            $(e).attr("class", "fine");
+                        }
+
+                        if ($(e).html() == "D.不太满意") {
+                            $(e).attr("class", "notGood");
+                        }
+
+                        if ($(e).html() == "E.非常不满意") {
+                            $(e).attr("class", "bad");
+                        }
+
+                    });
+
+                }
+
+            });
+
+        }, 50);
+    });
+
+    //尝试标出不同的答案就标一个专用颜色
+
+        function findCells() {
+
+            var cells = $("[lay-id='LAY-estimate-manage1'] .layui-table-cell");
+            $.each(cells,function (i,e) {
+                cellContent = $(e).html();
+                if(cellContent== "A.非常满意" ){
+                    $(e).addClass("veryGood");
+
+                }
+                else if (cellContent== "B.比较满意"){
+                    $(e).addClass("good");
+                }else if(cellContent== "C.基本满意"){
+                    $(e).addClass("fine");
+                }else if(cellContent== "D.不太满意"){
+                    $(e).addClass("notGood");
+                }else if(cellContent== "E.非常不满意"){
+                    $(e).addClass("bad");
+                }
+            })
+
+        }
+
+        setTimeout(function () {
+            findCells();
+            $("#forAppendContent").hide();
+        },1000);
+
+        setTimeout(function () {
+            findCells();
+            $("#forAppendContent").hide();
+        },2000);
+
+        setTimeout(function () {
+            findCells();
+        },8000);
+
+
+    // 监听任何的点击，都刷新颜色
+        $("div.layui-card-body table#LAY-estimate-manage1").click(function () {
+            findCells();
+        });
+
+        $("#estimateList").on("click",'div[lay-id="LAY-estimate-manage1"]',function () {
+            findCells();
+        })
+
+    })
+    ;
+
+
+</script>

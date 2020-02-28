@@ -1,0 +1,73 @@
+<title>teacherClass form</title>
+
+<form class="layui-form" lay-filter="layadmin-teacherClass-formlist">
+
+
+    <input type="hidden" name="id">
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">讲师</label>
+        <div class="layui-input-block">
+
+
+            <select id="f_teacherId_relation" name="empId" class="layui-input" lay-verify="required" lay-search="">
+                <option value="">直接选择或搜索选择</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">学科选择</label>
+        <div class="layui-input-block">
+            <select id="f_subjectId" name="subjectId" class="layui-input" lay-verify="required" lay-search="">
+                <option value="">直接选择或搜索选择</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <select id="f_type" name="status" class="layui-input" lay-filter="f_type" lay-verify="required" lay-search="">
+
+                <option value="1">生效</option>
+                <option value="-1">失效</option>
+
+            </select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="LAY-teacherClass-front-submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+
+    var teacher_type = "";
+
+    layui.use(['laydate', 'admin', 'form'], function () {
+
+        var $ = layui.$
+            , laydate = layui.laydate
+            , form = layui.form
+            , admin = layui.admin;
+
+        // form.render("select","layadmin-estimate-formlist");
+
+        $("#f_teacherId_relation").append(window.employees_all);
+        $("#f_subjectId").append(window.subjects);
+
+        form.render("select","layadmin-teacherClass-formlist");
+
+    })
+
+
+</script>

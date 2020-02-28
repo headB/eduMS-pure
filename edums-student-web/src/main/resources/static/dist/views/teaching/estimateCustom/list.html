@@ -1,0 +1,104 @@
+<title>estimateCustom管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb"/>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-estimateCustom-formlist">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">关键字</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="keyword" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-estimateCustom-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <table id="LAY-estimateCustom-manage" lay-filter="LAY-estimateCustom-manage"></table>
+            <script type="text/html" id="estimateCustom-list-manage-btn">
+                <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="addTemplate"><i
+                        class="layui-icon layui-icon-edit"></i>加/查看问题</a>
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>改类型</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+            <script type="text/html" id="estimateCustom-table-manage-btn">
+                <a class="layui-btn layui-btn-xs table-manage-btn" lay-event="add">创建</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs table-manage-btn" lay-event="batchdel">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use('estimateCustom', layui.factory('estimateCustom')).use(['admin', 'layer', 'estimateCustom', 'table'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            view = layui.view,
+            table = layui.table,
+            layer = layui.layer,
+            form = layui.form;
+
+        form.render(null, 'layadmin-estimateCustom-formlist');
+
+        //监听搜索
+        form.on('submit(LAY-estimateCustom-front-search)', function (data) {
+            var field = data.field;
+
+            //执行重载
+            table.reload('LAY-estimateCustom-manage', {
+                where: field
+            });
+        });
+
+        //获取options选项数据
+        admin.req({
+            url: '/estimateOptions/combinations',
+            type: 'get',
+            done: function (e) {
+                //能成功获取到数据的话，就进行字段的渲染
+
+                //获取得到option数组的数据
+                window.currentOptionCombination = e;
+
+            }
+
+        });
+
+        //查询学科分类
+        admin.req({
+
+            url:'/trainproducts?type=all&size=300',
+            done:function (res) {
+
+                if(res.data && res.data.length){
+
+                    var options = '';
+                    $.each(res.data,function (i,e) {
+
+                        options += "<option value='" + e.id + "'>" + e.title + "</option>";
+
+                    });
+                    //$("#subjectId").append(options);f_subjectDetailId
+                    form.render("select","layadmin-estimateCustom-formlist");
+                    window.subjects_type = options;
+
+                }
+
+            }
+
+        });
+
+
+    });
+</script>

@@ -1,0 +1,352 @@
+<title>estimateCustom form</title>
+
+<form class="layui-form ContentForm" lay-filter="layadmin-estimateCustom-formlistTemplate">
+    <input type="hidden" id="customId" name="id">
+    <div class="layui-form-item">
+        <label class="layui-form-label">模板:</label>
+        <div class="layui-input-block">
+            <span class="layui-input" style="padding: 9px 15px;border: 0px"> 当前编辑中的评分模板是-> <span class="description">
+
+            </span> | 类型:<span class="subjectType"></span> | 学科:<span class="subjectName"></span></span>
+        </div>
+    </div>
+
+
+
+<!--    这里是用作 动态 显示当前的 有哪些模板，以及需要添加哪些模板问题内容！-->
+<!--    以及需要如何调整各个问题之间的顺序-->
+    <div class="layui-form-item" id="addContent">
+
+
+
+    </div>
+
+    <div class="layui-form-item">
+        <button id="addContentButton" type="button" class="layui-btn"><i class="layui-icon"></i>新增添加问题</button>
+    </div>
+
+
+
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="LAY-estimateCustom-front-submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" >
+
+    layui.use(['laydate','admin','form' ], function() {
+
+        var $ = layui.$
+            , laydate = layui.laydate
+            , form = layui.form
+            , admin = layui.admin;
+
+        window.ids = [];
+
+
+        //加载option数据。
+        var i = 0;
+
+        var optionCombinationList = {};
+        var optionCombinationText = "";
+
+
+        //option_content = '<option value="">请选取回答选项</option>';
+        option_content = '';
+
+        $.each(window.currentOptionCombination.data,function (i,e) {
+
+            str = '<option value="'+e.id+'">'+ e.optionTitle +'</option>';
+            option_content+=str;
+
+            var optionValue = e.id;
+
+                content = '';
+            $.each(e.estimateOptions,function (i,e) {
+
+                //然后可以组装了。！
+                seq = 65;
+                seqs = String.fromCharCode(seq + i);
+
+                content += seqs +"."+e.title + " | "
+
+
+            });
+
+            optionCombinationList[optionValue] = content;
+
+
+
+        });
+
+        optionCombinationList[-1] = "<diiv><input type='text' value='学员填写文本评论' readonly='readonly' ></div>";
+
+        option_content += "<option value='-1' >评论框</option>";
+
+        //添加一个默认的select，可以用于重复显示的。
+        select_content_append =
+
+            "<select style='width:200px' id=\"f_optionCombination\" lay-filter=\"f_optionCombination\" name=\"subjectId\"  class=\"selectOption layui-input\"  lay-verify=\"required\" lay-search=\"\">" +
+                         option_content + "</select>";
+
+
+        // form.render("select","layadmin-estimateCustom-formlist");
+        $("#f_subjectDetailId").html("");
+        $("#f_subjectDetailId").append(window.subjects_type);
+
+        //渲染钱，先检查是否有默认值
+
+
+
+        //渲染表单，产生html
+        form.render("select","layadmin-estimateCustom-formlist");
+        //form.render("select","layadmin-estimateCustom-formlistTemplate");
+
+
+
+        //监听搜索
+        form.on('select(f_optionCombination)', function (data) {
+
+
+            index = $(this).attr("lay-value");
+
+            $(this).parents("div.layui-form-select").next(".appendOption").remove();
+            $(this).parents("div.layui-form-select").after("<div class='appendOption'>"+optionCombinationList[index]+"</div>");
+
+
+        });
+
+
+
+
+
+        $("#customId").val(window.currentCustomId);
+        $(".description").html("").html(window.currentTemplateDescription);
+        $(".subjectName").html("").html(window.currentTemplateSubjectName);
+        $(".subjectType").html("").html(window.currentTemplateTypeTitle);
+
+        //更新当前问题的顺序或者排序
+        function updateQuestion(){
+
+            //然后重新计算当前所有的问题的排序
+            //直接利用JQ去获取
+            question_labels = $("label.question");
+
+            $.each(question_labels,function (i,e) {
+
+                $("label.question:eq("+i+")").html("问题"+(i+1)+":");
+                $("button.deleteContent:eq("+i+")").data("number",i);
+
+
+
+                $("div.dynamicContent:eq("+i+") input:eq(0)").attr("name","contents["+i+"].id");
+                $("div.dynamicContent:eq("+i+") input:eq(1)").attr("name","contents["+i+"].title");
+                $("div.dynamicContent:eq("+i+") input:eq(2)").attr("name","contents["+i+"].content");
+                $("div.dynamicContent:eq("+i+") input:eq(3)").attr("name","contents["+i+"].combinationId");
+                $("div.dynamicContent:eq("+i+") .selectOption").attr("name","contents["+i+"].optionId");
+                $(".selectOption.layui-input:eq("+i+")").attr("id","f_optionCombination_"+i);
+                $(".selectOption.layui-input:eq("+i+")").attr("lay-filter","f_optionCombination_"+i);
+
+
+                //监听搜索
+                form.on('select(f_optionCombination_'+i+')', function (data) {
+
+
+                    index = $(this).attr("lay-value");
+
+                    $(this).parents("div.layui-form-select").next(".appendOption").remove();
+                    $(this).parents("div.layui-form-select").after("<div class='appendOption'>"+optionCombinationList[index]+"</div>");
+
+
+                });
+
+
+            });
+
+            // $.each($(".selectOption.layui-input"),function (i,e) {
+            //     idName = $(e).attr("id");
+            //     console.log(idName);
+            //     form.val(idName,)
+            //
+            // });
+
+            form.render(null,"layadmin-estimateCustom-formlistTemplate");
+
+            $(".selectOption.layui-input+div").css("width","200px");
+
+        }
+
+        setTimeout(function () {
+
+            if(window.currentContents){
+
+                $.each(window.currentContents,function (i,e) {
+
+                    content = "<div class=\"layui-form-item dynamicContent\"><label class=\"layui-form-label question\">问题X:</label>";
+                    content += "<div class=\"layui-input-block\">" +
+                        "<input type=\"hidden\" name=\"id\" value='" + e.contentId + "' >"+
+                        "<input value='"+ e.contentTitle  +"' type=\"text\" name=\"shortDescription\" placeholder=\"请输入短标题，要求4到8个字之间,例如:上课纪律\" autocomplete=\"off\" class=\"layui-input\">" +
+                        "<input value='"+ e.contentDescription  +"'  type=\"text\" name=\"description\"  placeholder=\"详细的问题描述,例如:老师是否无迟到(上午08:50、中午14:20之前进入教室)、是否提前下课，是否在上课期间做和教学无关的事（聊微信，聊QQ，看和教学无关的视频等）\" autocomplete=\"off\" class=\"layui-input\">" +
+                        "<input type=\"hidden\" name=\"combinationId\" value='" + e.combinationId + "' >"+
+                        "<input type=\"hidden\" name=\"optionIdValue\" value='" + e.optionId + "' >"+
+                        select_content_append +
+                        "<button style='margin-bottom: 20px' type=\"button\" class=\"layui-btn layui-btn-danger deleteContent\">删除</button>"+"</div></div>";
+
+
+
+                    $("#addContent").append(content);
+
+
+
+                    //尝试一下在这里渲染，因为是一个一个来的！.
+
+
+
+                    // $("#addContent").append(select_content_append);
+
+
+
+
+
+                });
+
+                //这里需要查看当前是否存在optionId，有的话，证明需要渲染一下数据，并且更新一下对应的
+                var formVal = $(".selectOption layui-input");
+
+                $.each(formVal,function (i,e) {
+
+                });
+
+                form.render("select","layadmin-estimateCustom-formlistTemplate");
+
+                //然后修改一下下拉框的尺寸，不要显示得太大！。ß
+                $(".selectOption layui-input+div").css("width","200px");
+
+                updateQuestion();
+
+            }
+
+        },300);
+
+        //这里添加一个按钮,用于每次添加的时候生成新的内容
+        $("#addContentButton").click(function () {
+
+
+            //然后发现可以，然后就可以添加的，可以继续下一步了。！
+
+
+            // $("#addContent").html("");
+
+            content = "<div class=\"layui-form-item dynamicContent\"><label class=\"layui-form-label question\">问题X:</label>";
+            content += "<div class=\"layui-input-block\">" + "<input type=\"hidden\" name=\"id\" >"+
+                "<input type=\"text\" name=\"shortDescription\" placeholder=\"请输入短标题，要求4到8个字之间,例如:上课纪律\" autocomplete=\"off\" class=\"layui-input\">" +
+                "<input type=\"text\" name=\"description\"  placeholder=\"详细的问题描述,例如:老师是否无迟到(上午08:50、中午14:20之前进入教室)、是否提前下课，是否在上课期间做和教学无关的事（聊微信，聊QQ，看和教学无关的视频等）\" autocomplete=\"off\" class=\"layui-input\">" +
+                select_content_append +
+                    "<div class='appendOption'>"+optionCombinationList[index[0]]+"</div>"+
+                "<button style='margin-bottom: 20px' type=\"button\" class=\"layui-btn layui-btn-danger deleteContent\">删除</button>"+"</div></div>";
+
+            $("#addContent").append(content);
+
+
+
+            //重新添加一个变量去装内容
+            recoverContent = "";
+
+            // c1 = $("label.question:eq(1)");
+            // c1.html("问题2");
+
+            updateQuestion();
+
+        });
+
+        //监听删除按钮
+            $(".ContentForm").on("click",".deleteContent",function(){
+                //先取出具体第几个选项
+                number = $(this).data("number");
+
+                //以及获取隐藏域的id
+                target_id = $(".dynamicContent:eq("+number+") input:eq(3)").val();
+
+                if( target_id != null && target_id!="" && target_id!=0 ){
+                    window.ids.push(target_id);
+                }
+
+
+                $(".dynamicContent:eq("+number+")").remove();
+
+                updateQuestion();
+            });
+
+
+        function updateInfo(){
+
+            setTimeout(function () {
+
+                //获取json里面第一个元素
+                index = Object.keys(optionCombinationList);
+
+                // form.render("layadmin-estimateCustom-formlistTemplate",)
+                optionJson = {};
+                updateQuestion();
+                $.each($("div.layui-form-item.dynamicContent"),function (i,e) {
+
+                    optionValue = $(e).find("[name='optionIdValue']").val();
+
+                    filterName = $(e).find(".selectOption.layui-input").attr("id");
+                    nameValue = $(e).find(".selectOption.layui-input").attr("name");
+
+
+                    var content = $(e).find(".appendOption");
+
+
+
+                    $(e).find(".selectOption+.layui-form-select+div.appendOption").remove();
+
+                    optionJson[nameValue] = optionValue;
+
+                    if(optionValue!=null && optionValue!=''){
+                        $(e).find(".selectOption+.layui-form-select").after("<div class='appendOption'>"+optionCombinationList[optionValue]+"</div>");
+
+                        // form.render();//
+                    }else{
+                        $(e).find(".selectOption+.layui-form-select").after("<div class='appendOption'>"+optionCombinationList[index[0]]+"</div>");
+                    }
+
+
+
+                    //updateQuestion();
+
+                });
+
+                form.val("layadmin-estimateCustom-formlistTemplate",optionJson);
+
+
+                //然后修改一下下拉框的尺寸，不要显示得太大！。ß
+                updateQuestion();
+
+                //又要重新渲染
+                //form.render("select","layadmin-estimateCustom-formlistTemplate");
+            },300);
+
+        }
+
+       updateInfo();
+
+        setTimeout(function () {
+            updateInfo();
+        },300);
+
+        setTimeout(function () {
+            updateInfo();
+        },500);
+
+    });
+
+
+
+    </script>

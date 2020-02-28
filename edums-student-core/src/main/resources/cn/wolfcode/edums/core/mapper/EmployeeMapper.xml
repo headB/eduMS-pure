@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wolfcode.edums.core.mapper.EmployeeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.wolfcode.edums.core.domain.Employee">
+        <result column="id" property="id"/>
+        <result column="namepy" property="namePy"/>
+        <result column="truename" property="trueName"/>
+        <result column="sex" property="sex"/>
+        <result column="remark" property="remark"/>
+        <result column="duty" property="duty"/>
+        <result column="tel" property="tel"/>
+        <result column="address" property="address"/>
+        <result column="birthday" property="birthDay"/>
+        <result column="types" property="types"/>
+        <result column="intro" property="intro"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="workeronly" property="workerOnly"/>
+        <result column="entertime" property="enterTime"/>
+        <result column="qq" property="qq"/>
+        <result column="lastmodifiedtime" property="lastModifiedTime"/>
+        <result column="weixinid" property="weixinId"/>
+        <result column="maxclientnum" property="maxClientNum"/>
+        <result column="idcard" property="idCard"/>
+        <result column="hkadr" property="hkAdr"/>
+        <result column="endtime" property="endTime"/>
+        <result column="positivetime" property="positiveTime"/>
+        <result column="leavetime" property="leaveTime"/>
+        <result column="school" property="school"/>
+        <result column="nation" property="nation"/>
+        <result column="education" property="education"/>
+        <result column="major" property="major"/>
+        <result column="soslinkman" property="sosLinkMan"/>
+        <result column="soslinktel" property="sosLinkTel"/>
+        <result column="recordid" property="recordId"/>
+        <result column="probationsalary" property="probationSalary"/>
+        <result column="officialsalary" property="officialSalary"/>
+        <result column="socialsecuritynature" property="socialSecurityNature"/>
+        <result column="socialsecuritydate" property="socialSecurityDate"/>
+        <result column="oldcompany" property="oldCompany"/>
+        <result column="reservedate" property="reserveDate"/>
+    </resultMap>
+
+    <resultMap id="FullResultMap" extends="BaseResultMap" type="cn.wolfcode.edums.core.vo.EmployeeVO">
+        <result column="dept_name" property="deptName"/>
+        <result column="username" property="username"/>
+        <result column="email" property="email"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        e.id, e.namepy, e.truename, e.sex, e.remark, e.duty, e.tel, e.address, e.birthday, e.types,
+        e.intro, e.dept_id, e.workeronly, e.entertime, e.qq, e.lastmodifiedtime, e.weixinid, e.maxclientnum,
+        e.idcard, e.hkadr, e.endtime, e.positivetime, e.leavetime, e.school, e.nation, e.education, e.major,
+        e.soslinkman, e.soslinktel, e.recordid, e.probationsalary, e.officialsalary, e.socialsecuritynature,
+        e.socialsecuritydate, e.oldcompany, e.reservedate
+    </sql>
+
+    <!-- 带关联关系的列 -->
+    <sql id="Full_Column_List">
+        e.id, e.namepy, e.truename, e.sex, e.remark, e.duty, e.tel, e.address, e.birthday, e.types,
+        e.intro, e.dept_id, e.workeronly, e.entertime, e.qq, e.lastmodifiedtime, e.weixinid, e.maxclientnum,
+        e.idcard, e.hkadr, e.endtime, e.positivetime, e.leavetime, e.school, e.nation, e.education, e.major,
+        e.soslinkman, e.soslinktel, e.recordid, e.probationsalary, e.officialsalary, e.socialsecuritynature,
+        e.socialsecuritydate, e.oldcompany, e.reservedate,
+        d.title dept_name,
+        u.name username, u.email email, u.status status
+    </sql>
+
+    <select id="pageList" resultMap="FullResultMap">
+        select <include refid="Full_Column_List"/>
+        from t_employee e
+        left join t_department d on e.dept_id = d.id
+        join t_userinfo u on e.id = u.id
+        <where>
+            e.truename &lt;&gt; 'admin'
+            <if test="qo.keyword != null">
+                and (e.truname like '%' #{qo.keyword} '%' or e.namepy like '%' #{qo.keyword} '%')
+            </if>
+            <if test="qo.deptId > -1">
+                and e.dept_id = #{qo.deptId}
+            </if>
+            <if test="qo.sex != null">
+                and e.sex = #{qo.sex}
+            </if>
+        </where>
+    </select>
+</mapper>

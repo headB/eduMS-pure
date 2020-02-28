@@ -1,0 +1,45 @@
+# spring
+spring:
+  # mysql
+  datasource:
+    druid:
+      url: jdbc:mysql://192.168.113.66:3307/crm?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&allowMultiQueries=true&serverTimezone=PRC&useSSL=false
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: dev
+      # 数据库密码加密，通过 cn.wolfcode.edums.core.util.DruidDatasourcePasswordUtil.main 方法对密码进行加密，获取密文密码与公钥
+      password: eMq5r9f0eS+ZADqg3w0rksrNdTEE+CCZ9XBe3C6skowO2YmH8DPbab9iJQN0/VBYnKb1ggY3gUXXOiQYg7FLAw==
+      initial-size: 5
+      max-active: 20
+      connection-properties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJSZJ1u5EutKXlssn62mcR64QW52an6JRGUrNA+7MyXZXbDMDBYBoVeVUgdJnbEVrTFNifbE96ZaViZRelRsBa8CAwEAAQ==
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 900000
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      webStatFilter:
+        enabled: true
+        # 添加过滤规则
+        url-pattern: /*
+        # 忽略过滤格式
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+      statViewServlet:
+        enabled: true
+        loginUsername: druid
+        loginPassword: druid123
+        url-pattern: /dstat/*
+      filter:
+        stat:
+          enabled: true
+          # 慢SQL记录
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        config:
+          enabled: true

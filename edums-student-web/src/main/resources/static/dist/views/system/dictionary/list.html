@@ -1,0 +1,77 @@
+<title>数据字典管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb"/>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-row">
+                <div class="layui-col-md3">
+                    <script type="text/html" template lay-url="/dictionary?v={{ layui.admin.v }}"
+                            lay-done="layui.element.render('nav', 'edums-dictionary-side'); init();"
+                            id="TPL_dictionary">
+                        <ul class="layui-nav layui-nav-tree" id="edums-dictionary-side"
+                            lay-filter="edums-dictionary-side">
+                            {{# layui.each(d.data, function(i, v) { }}
+                            <li class="layui-nav-item {{ i === 0 ? 'layui-this' : ''}}"
+                                data-json='{{ JSON.stringify(v) }}' data-sn="{{ v.sn }}"><a
+                                    href="javascript:;">{{ v.title }}</a></li>
+                            {{# }) }}
+                        </ul>
+                    </script>
+                </div>
+                <div class="layui-col-md9">
+                    <table id="LAY-dictionary-manage" lay-filter="LAY-dictionary-manage"></table>
+                    <script type="text/html" id="dictionary-list-manage-btn">
+                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="editDetail"><i
+                                class="layui-icon layui-icon-edit"></i>编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delDetail"><i
+                                class="layui-icon layui-icon-delete"></i>删除</a>
+                    </script>
+                    <script type="text/html" id="dictionary-table-manage-btn">
+                        <a class="layui-btn layui-btn-xs table-manage-btn" lay-event="createDic">创建目录</a>
+                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="editDic">编辑目录</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs table-manage-btn" lay-event="delDic">删除目录</a>
+                        <a class="layui-btn layui-btn-xs table-manage-btn" lay-event="addDetail">添加详情</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .layui-nav-tree {
+        width: 95%;
+        overflow: scroll;
+        padding: 0;
+    }
+</style>
+<script>
+    function init() {
+        layui.use('dictionary', layui.factory('dictionary')).use(['table', 'dictionary'], function () {
+            var $ = layui.$,
+                table = layui.table,
+                ul = $("#edums-dictionary-side"),
+                liList = ul.find("li"),
+                first = $(liList[0]);
+
+            reloadDetail(table, first);
+
+            liList.on('click', function (e) {
+                var _this = $(e.target.parentElement);
+                reloadDetail(table, _this);
+            });
+
+            ul.css("height", window.innerHeight - 100)
+        });
+    }
+
+    function reloadDetail(table, ele) {
+        table.reload("LAY-dictionary-manage", {
+            url: '/dictionary/details',
+            where: {sn: ele.data("sn")}
+        });
+    }
+</script>

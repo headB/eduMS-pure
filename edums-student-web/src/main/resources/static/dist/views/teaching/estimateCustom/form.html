@@ -1,0 +1,63 @@
+<title>estimateCustom form</title>
+
+<form class="layui-form" lay-filter="layadmin-estimateCustom-formlist">
+    <input type="hidden" name="id">
+    <div class="layui-form-item">
+        <label class="layui-form-label">模板描述</label>
+        <div class="layui-input-block">
+            <input type="text" name="description" placeholder="模板描述,例如：java基础班讲师评分" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">评分类型</label>
+        <div class="layui-input-block">
+            <select id="f_type" name="typeId" class="layui-input" lay-filter="f_type" lay-verify="required"  lay-search="">
+                <option value="">直接选择或搜索选择</option>
+                <option value="1">讲师</option>
+                <option value="2">班主任</option>
+                <option value="3">辅导员</option>
+                <option value="4">学习反馈</option>
+            </select>
+        </div>
+    </div>
+
+
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">学科类型</label>
+        <div class="layui-input-block">
+
+            <select id="f_subjectDetailId" lay-filter="f_subjectDetailId" name="subjectId"  class="layui-input"  lay-verify="required" lay-search="">
+                <option value="">直接选择或搜索选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="LAY-estimateCustom-front-submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" >
+
+    layui.use(['laydate','admin','form' ], function() {
+
+        var $ = layui.$
+            , laydate = layui.laydate
+            , form = layui.form
+            , admin = layui.admin;
+
+        // form.render("select","layadmin-estimateCustom-formlist");
+        $("#f_subjectDetailId").html("");
+        $("#f_subjectDetailId").append(window.subjects_type);
+        form.render("select","layadmin-estimateCustom-formlist");
+
+    });
+
+    </script>

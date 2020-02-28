@@ -1,0 +1,173 @@
+<title>面试跟踪</title>
+
+<form class="layui-form" lay-filter="layadmin-studentInterview-formlist" id="editForm" enctype="multipart/form-data">
+    <input type="hidden" name="id">
+    <div class="layui-row">
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">学员</label>
+                <div class="layui-input-block">
+                    <div id="f_studentId" class="xm-select-demo"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属学科</label>
+                <div class="layui-input-block">
+                    <select id="f_subjectId" name="subjectId" lay-search lay-filter="f_subjectId">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">所在班级</label>
+                <div class="layui-input-block">
+                    <select id="f_classinfoId" name="classinfoId" lay-search>
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">面试公司</label>
+                <div class="layui-input-block">
+                    <input type="text" name="companyName" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">面试岗位</label>
+                <div class="layui-input-block">
+                    <input type="text" name="jobName" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">岗位薪资</label>
+                <div class="layui-input-block">
+                    <input type="text" name="salary" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司城市</label>
+                <div class="layui-input-block">
+                    <input type="text" name="companyCity" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">面试时间</label>
+                <div class="layui-input-block">
+                    <input type="text" id="interviewTime" name="interviewTime" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">面试地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="interviewAddr" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">面试情况</label>
+                <div class="layui-input-block">
+                    <textarea type="text" name="interviewSituation" placeholder="请输入" autocomplete="off"
+                      class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司评价</label>
+                <div class="layui-input-block">
+                    <textarea type="text" name="studentInterviewComment" placeholder="请输入" autocomplete="off"
+                              class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司标签</label>
+                <div class="layui-input-block">
+                    <input type="text" name="teacherCompanyTag" placeholder="请输入" autocomplete="off"
+                              class="layui-input">
+                </div>
+            </div>
+    <div class="layui-row">
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">面试题附件</label>
+                <div class="layui-input-block">
+
+                    <span id="noquestionMsg">暂无面试题可下载</span>
+                    <a hidden style="color: green;text-decoration:underline; cursor:pointer"
+                       id="downloadQuestion">已有面试题可下载</a>
+                    <input type="hidden" name="interviewQuestionUrl"/>
+
+                </div>
+                <div class="layui-input-block">
+                    <input type="file" name="interviewQuestionFile" id="interviewQuestionFile"/>
+                    <p>上传前请先压缩为zip文件</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">录音附件</label>
+                <div class="layui-input-block">
+
+                    <span id="norecordMsg">暂无面试录音可下载</span>
+                    <a hidden style="color: green;text-decoration:underline; cursor:pointer"
+                       id="downloadRecord">已有面试录音可下载</a>
+                    <input type="hidden" name="interviewRecordUrl"/>
+                </div>
+                <div class="layui-input-block">
+                    <input type="file" name="interviewRecordFile" id="interviewRecordFile"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="LAY-studentInterview-front-submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+
+
+<script>
+
+    layui.use(['laydate'], function() {
+
+        var $ = layui.$
+            , laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#interviewTime',
+            type: 'datetime'
+        });
+
+
+
+
+    })
+</script>

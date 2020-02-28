@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wolfcode.edums.core.mapper.PermissionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.wolfcode.edums.core.domain.Permission">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="sn" property="sn" />
+        <result column="description" property="description" />
+        <result column="operation" property="operation" />
+        <result column="status" property="status" />
+        <result column="parent_id" property="parentId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        name, sn, description, operation, status, parent_id
+    </sql>
+
+    <select id="selectPermsSnListByUserId" resultType="java.lang.String">
+        select p.name
+        from t_tpermission p
+        join t_role_permissions rp on p.id = rp.permissions_id
+        join t_trole r on rp.roles_id = r.id
+        join t_role_userinfo ru on r.id = ru.roles_id
+        where ru.users_id = #{id} and p.status = #{status}
+    </select>
+
+    <select id="selectAllSnList" resultType="java.lang.String">
+        select name
+        from t_tpermission
+        where status = #{status}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_tpermission
+        where status = #{status}
+    </select>
+</mapper>

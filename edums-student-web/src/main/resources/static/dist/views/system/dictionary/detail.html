@@ -1,0 +1,46 @@
+<title>数据字典详情表单</title>
+
+<form class="layui-form" lay-filter="layadmin-dictionary-formlist">
+    <input type="hidden" name="id">
+    <div class="layui-form-item">
+        <label class="layui-form-label">父目录</label>
+        <div class="layui-input-block">
+            <input type="text" name="parentName" disabled readonly autocomplete="off" class="layui-input">
+            <input type="hidden" name="parentId">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">序号</label>
+        <div class="layui-input-block">
+            <input type="text" name="sequence" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">内容</label>
+        <div class="layui-input-block">
+            <input type="text" name="tvalue" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">简介</label>
+        <div class="layui-input-block">
+            <input type="text" name="intro" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="LAY-dictionary-front-submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>

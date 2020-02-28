@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wolfcode.edums.core.mapper.SystemMenuMapper">
+
+    <resultMap id="BaseResultMap" type="cn.wolfcode.edums.core.domain.SystemMenu">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="url" property="url"/>
+        <result column="types" property="types"/>
+        <result column="sequence" property="sequence"/>
+        <result column="appclass" property="appClass"/>
+        <result column="otherscripts" property="otherScripts"/>
+        <result column="pack" property="pack"/>
+        <result column="icon" property="icon"/>
+        <result column="status" property="status"/>
+        <result column="params" property="params"/>
+        <result column="fee" property="fee"/>
+        <result column="sn" property="sn"/>
+        <result column="vrtype" property="vrType"/>
+        <result column="therole" property="theRole"/>
+        <result column="issystem" property="isSystem"/>
+        <result column="actionclass" property="actionClass"/>
+        <result column="parent_id" property="parentId"/>
+    </resultMap>
+
+    <resultMap id="FullResultMap" type="cn.wolfcode.edums.core.vo.SystemMenuVO">
+        <result column="parentName" property="parentName"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        title, url, types, sequence, appclass, otherscripts, pack, icon, status, params, fee,
+        sn, vrtype, therole, issystem, actionclass, parent_id
+    </sql>
+
+    <sql id="Full_Column_List">
+        c.id, c.title, c.url, c.types, c.sequence, c.appclass, c.otherscripts, c.pack, c.icon, c.status, c.params, c.fee,
+        c.sn, c.therole, c.issystem, c.actionclass, c.parent_id,
+        p.title parentName
+    </sql>
+
+    <select id="selectMenusByUserId" resultMap="BaseResultMap">
+        select distinct
+            id, title, url, types,
+            sequence, appclass, otherscripts,
+            pack, icon, status, params, fee,
+            sn, vrtype, therole, issystem,
+            actionclass, parent_id
+        from t_systemmenu m
+        join t_systemmenu_roles mr on m.id = mr.systemmenu_id
+        join t_role_userinfo ru on mr.theroles_id = ru.roles_id
+		join t_employee_systemmenu em on ru.users_id = em.employee_id
+        where ru.users_id = #{userId} AND m.types = #{type}
+    </select>
+
+    <select id="pageList" resultMap="FullResultMap">
+        select
+        <include refid="Full_Column_List"/>
+        from t_systemmenu c left join t_systemmenu p on c.parent_id = p.id
+        <where>
+            <if test="qo.type != null">
+                c.types = #{qo.type}
+            </if>
+            <choose>
+                <when test="qo.parentId == null">
+                    and c.parent_id is null
+                </when>
+                <otherwise>
+                    and c.parent_id = #{qo.parentId}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+</mapper>

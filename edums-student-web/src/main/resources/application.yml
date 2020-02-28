@@ -1,0 +1,43 @@
+# Tomcat
+server:
+  port: 8080
+  tomcat:
+    max-threads: 1000
+    min-spare-threads: 30
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,application/octet-stream,text/html,text/xml,text/plain,text/css,text/javascript
+# 环境 dev|test|prod
+spring:
+  profiles:
+    active: @spring.profiles.active@
+  # jackson时间格式化
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
+  session:
+    store-type: none
+  servlet:
+    # 上传文件大小设置
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+# mybatis
+mybatis-plus:
+  configuration:
+    # 去除下划线转驼峰表达式规则，统一使用 @TableField 注解标识特殊字段，避免因列名不规范导致出错
+    map-underscore-to-camel-case: false
+  global-config:
+    db-config:
+      id-type: auto
+      table-underline: true
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+  mapper-locations: classpath:cn/wolfcode/edums/*/mapper/*Mapper.xml
+  # 自定义类型处理器
+  type-handlers-package: cn.wolfcode.edums.core.support.ibatis.type
+logging:
+  config:
+    path: @project.logdir@

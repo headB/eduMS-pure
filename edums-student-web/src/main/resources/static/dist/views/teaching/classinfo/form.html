@@ -1,0 +1,154 @@
+<title>classinfo form</title>
+
+<form class="layui-form" lay-filter="layadmin-classinfo-formlist">
+    <input type="hidden" name="id"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">班级标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">开班时间</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input"  name="beginTime" placeholder="请输入" autocomplete="off" id="begintime"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">毕业时间</label>
+        <div class="layui-input-block">
+            <input type="text" name="endTime" placeholder="请输入" autocomplete="off" class="layui-input" id="endtime"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <select id="status" name="status">
+                <option value="0">报名中</option>
+                <option value="1">已开班</option>
+                <option value="2">已毕业</option>
+                <option value="-1">取消</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">培训产品</label>
+        <div class="layui-input-block">
+            <select id="f_productId" name="productId"  lay-verify="required" class="layui-input">
+                <option value="">直接选择或搜索选择</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属校区</label>
+        <div class="layui-input-block">
+            <select id="f_campusId" name="campusId"  lay-verify="required" class="layui-input">
+                <option value="">直接选择或搜索选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">主班主任</label>
+        <div class="layui-input-block">
+       <!--     <select id="f_classteacherId" name="classteacherId" placeholder="请输入" class="layui-input">
+            </select>-->
+                <select id="f_classteacherId" name="classTeacherId" class="layui-input"  lay-search="">
+                    <option value="">直接选择或搜索选择</option>
+                </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">副班主任</label>
+        <div class="layui-input-block">
+            <select id="f_secondteacherId" name="secondTeacherId" class="layui-input" lay-search>
+                <option value="">直接选择或搜索选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">教室安排</label>
+        <div class="layui-input-block">
+            <select id="t_classroomId" name="classroomId" class="layui-input" lay-search>
+                <option value="">直接选择或搜索选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">计划人数</label>
+        <div class="layui-input-block">
+            <input type="text" name="planNumber" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">团队奖励</label>
+        <div class="layui-input-block">
+            <input type="text" name="teamReward" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">原价</label>
+        <div class="layui-input-block">
+            <input type="text" name="fee" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">优惠价</label>
+        <div class="layui-input-block">
+            <input type="text" name="discountFee" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">零付款价格</label>
+        <div class="layui-input-block">
+            <input type="text" name="zeroPayFee" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <input type="text" name="reamrk" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="LAY-classinfo-front-submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+
+</form>
+
+<script>
+
+    layui.use(['laydate','admin','form' ], function() {
+
+        var $ = layui.$
+            , laydate = layui.laydate
+            , form = layui.form
+            , admin = layui.admin;
+
+        laydate.render({
+            elem: '#begintime'
+        });
+        laydate.render({
+            elem: '#endtime'
+        });
+
+        $("#f_productId").append(window.products);
+        $("#f_campusId").append(window.campuss);
+        $("#f_classteacherId").append(window.employees);
+        $("#f_secondteacherId").append(window.employees);
+        $("#t_classroomId").append(window.classrooms);
+
+    })
+</script>

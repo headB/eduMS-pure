@@ -1,0 +1,110 @@
+<title>员工管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb"/>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-userfront-formlist">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="username" placeholder="姓名/拼音" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门</label>
+                    <div class="layui-input-block">
+                        <select id="deptId" name="deptId">
+                            <option value="-1">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-block">
+                        <select name="sex">
+                            <option value="">不限</option>
+                            <option>男</option>
+                            <option>女</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-user-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <table id="LAY-user-manage" lay-filter="LAY-user-manage"></table>
+            <script type="text/html" id="table-useradmin-webuser">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                {{# if (d.status === 0) { }}
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>停用</a>
+                {{# } else { }}
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="restore"><i
+                        class="layui-icon layui-icon-delete"></i>恢复</a>
+                {{# } }}
+            </script>
+            <script type="text/html" id="table-emp-manage-btn">
+                <a class="layui-btn layui-btn-xs table-emp-manage-btn" lay-event="add">创建</a>
+                <a class="layui-btn layui-btn-xs table-emp-manage-btn" lay-event="resetpwd">重置密码</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs table-emp-manage-btn" lay-event="batchdel">停用</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 暂存部门列表
+    var deptOptions = "";
+
+    layui.use('employee', layui.factory('employee')).use(['admin', 'employee', 'layer', 'table'], function () {
+            var $ = layui.$,
+                admin = layui.admin,
+                table = layui.table,
+                form = layui.form;
+
+            form.render(null, 'layadmin-userfront-formlist');
+
+            if (!deptOptions) {
+                // 渲染 select
+                admin.req({
+                    url: '/departments?type=all',
+                    done: function (res) {
+                        if (res.data && res.data.length) {
+                            var options = '';
+                            $.each(res.data, function (i, e) {
+                                options += "<option value='" + e.id + "'>" + e.title + "</option>";
+                            });
+                            deptOptions = options;
+                            $("#deptId").append(options);
+                            form.render("select", "layadmin-userfront-formlist")
+                        }
+                    }
+                });
+            } else {
+                $("#parentId").append(deptOptions);
+                form.render("select", "layadmin-userfront-formlist");
+            }
+
+            //监听搜索
+            form.on('submit(LAY-user-front-search)', function (data) {
+                var field = data.field;
+
+                //执行重载
+                table.reload('LAY-user-manage', {
+                    where: field
+                });
+            });
+
+        }
+    );
+</script>

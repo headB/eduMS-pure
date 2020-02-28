@@ -1,0 +1,195 @@
+<title>学员工作跟踪</title>
+
+<form class="layui-form" lay-filter="layadmin-studentJob-formlist">
+    <input type="hidden" name="id">
+
+    <div class="layui-row">
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">学员</label>
+                <div class="layui-input-block">
+                    <div id="f_studentId" class="xm-select-demo"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">学科</label>
+                <div class="layui-input-block">
+                    <select id="f_subjectId" name="subjectId" lay-search lay-filter="f_subjectId">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">班级</label>
+                <div class="layui-input-block">
+                    <select id="f_classinfoId" name="classinfoId" lay-search>
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="companyName" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司城市</label>
+                <div class="layui-input-block">
+                    <input type="text" name="companyCity" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司行业</label>
+                <div class="layui-input-block">
+                    <input type="text" name="companyBusiness" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司规模</label>
+                <div class="layui-input-block">
+                    <input type="text" name="companyScale" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司性质</label>
+                <div class="layui-input-block">
+                    <select name="companyNature" class="layui-select">
+                        <option value="">请选择</option>
+                        <option value="非外包">非外包</option>
+                        <option value="外包">外包</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">工作时间</label>
+                <div class="layui-input-block">
+                    <input type="text" id="workDate" name="workDate" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <select name="status" class="layui-select">
+                        <option value="0">在职</option>
+                        <option value="-1">离职</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">就职岗位</label>
+                <div class="layui-input-block">
+                    <input type="text" name="jobName" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否转行</label>
+                <div class="layui-input-block">
+                    <select name="changeProfession">
+                        <option value="0">否</option>
+                        <option value="1">是</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">就业类型</label>
+                <div class="layui-input-block">
+                    <select name="type">
+                        <option value="">请选择</option>
+                        <option value="0">社招</option>
+                        <option value="1">校招</option>
+                        <option value="2">创业</option>
+                        <option value="3">推荐</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">岗位薪资</label>
+                <div class="layui-input-block">
+                    <input type="text" name="salary" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">离职时间</label>
+                <div class="layui-input-block">
+                    <input type="text" id="resignationDate" name="resignationDate" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-form-item">
+                <label class="layui-form-label">离职原因</label>
+                <div class="layui-input-block">
+                    <input type="text"  name="resignationReason" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="LAY-studentJob-front-submit">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+    </div>
+</form>
+
+<script>
+
+    layui.use(['laydate'], function() {
+
+        var $ = layui.$
+            , laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#resignationDate'
+        });
+        laydate.render({
+            elem: '#workDate'
+        });
+
+
+    })
+</script>

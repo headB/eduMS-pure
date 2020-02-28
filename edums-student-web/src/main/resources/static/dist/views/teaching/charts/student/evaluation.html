@@ -1,0 +1,125 @@
+<title>学员流向维度统计</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb"/>
+</div>
+
+<style>
+    .layui-input-block {
+        margin-left: 68px;
+        min-height: 36px;
+    }
+
+    .layui-form-label {
+        float: left;
+        display: block;
+        padding: 9px 0;
+        width: 60px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: right;
+    }
+</style>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto"
+             lay-filter="layadmin-studentEvaluationCharts-formlist">
+            <div class="layui-form-item">
+                <div class="lay-row">
+                    <div class="layui-col-md2">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">开始时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="beginDate" name="beginDate" placeholder="请选择开始时间"
+                                       autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md2">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">结束时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="endDate" name="endDate" placeholder="请选择开始时间" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">学科</label>
+                            <div class="layui-input-block">
+                                <select name="trainProductId">
+                                    <option value="-1">请选择</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">班级类型</label>
+                            <div class="layui-input-block">
+                                <select name="classType">
+                                    <option value="-1">请选择</option>
+                                    <option value="1">基础班</option>
+                                    <option value="2">大神班</option>
+                                    <option value="3">周末班</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md2">
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-btn-useradmin" lay-submit
+                                    lay-filter="LAY-studentEvaluationCharts-front-search">
+                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <table id="LAY-studentEvaluationCharts-manage" lay-size="sm"
+                   lay-filter="LAY-studentEvaluationCharts-manage"></table>
+        </div>
+    </div>
+</div>
+
+<script>
+    var trainProductOptions;
+
+    layui.use('studentEvaluationCharts', layui.factory('studentEvaluationCharts')).use(['admin', 'common', 'laydate', 'studentEvaluationCharts', 'table'], function () {
+        var $ = layui.$,
+            table = layui.table,
+            laydate = layui.laydate,
+            common = layui.common,
+            form = layui.form,
+            now = new Date();
+
+        laydate.render({
+            elem: '#beginDate',
+            value: now.getFullYear() + '-01-01'
+        });
+        laydate.render({
+            elem: '#endDate',
+            value: now
+        });
+
+        // 渲染 select
+        common.renderSelector(form, trainProductOptions, '/trainproducts?type=all', 'select[name=trainProductId]', 'layadmin-studentEvaluationCharts-formlist', 'id', 'title')
+
+        form.render(null, 'layadmin-studentEvaluationCharts-formlist');
+
+        //监听搜索
+        form.on('submit(LAY-studentEvaluationCharts-front-search)', function (data) {
+            var field = data.field;
+
+            //执行重载
+            table.reload('LAY-studentEvaluationCharts-manage', {
+                where: field
+            });
+        });
+    });
+</script>

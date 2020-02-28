@@ -1,0 +1,91 @@
+<title>部门管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb"/>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-department-formlist">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">关键字</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="keyword" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">父部门</label>
+                    <div class="layui-input-block">
+                        <select id="parentId" name="parentId">
+                            <option value="-1">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-department-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <table id="LAY-department-manage" lay-filter="LAY-department-manage"></table>
+            <script type="text/html" id="department-list-manage-btn">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+            <script type="text/html" id="department-table-manage-btn">
+                <a class="layui-btn layui-btn-xs table-manage-btn" lay-event="add">创建</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs table-manage-btn" lay-event="batchdel">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script>
+    var deptOptions;
+    layui.use('department', layui.factory('department')).use(['admin', 'layer', 'department', 'table'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            view = layui.view,
+            table = layui.table,
+            layer = layui.layer,
+            form = layui.form;
+
+        form.render(null, 'layadmin-department-formlist');
+
+        if (!deptOptions) {
+            admin.req({
+                url: '/departments?type=all',
+                done: function (res) {
+                    if (res.data && res.data.length) {
+                        var options = '';
+                        $.each(res.data, function (i, e) {
+                            options += "<option value='" + e.id + "'>" + e.title + "</option>";
+                        });
+                        deptOptions = options;
+                        $("#parentId").append(options);
+                        form.render("select", "layadmin-department-formlist")
+                    }
+                }
+            });
+        } else {
+            $("#parentId").append(deptOptions);
+            form.render("select", "layadmin-department-formlist");
+        }
+
+        //监听搜索
+        form.on('submit(LAY-department-front-search)', function (data) {
+            var field = data.field;
+
+            //执行重载
+            table.reload('LAY-department-manage', {
+                where: field
+            });
+        });
+    });
+</script>

@@ -1,0 +1,41 @@
+<title>教室管理</title>
+
+<form class="layui-form" lay-filter="layadmin-classroom-formlist">
+    <input type="hidden" name="id"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">教室名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">教室地址</label>
+        <div class="layui-input-block">
+            <input type="text" name="address" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">容纳人数</label>
+        <div class="layui-input-block">
+            <input type="text" name="capacity" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">教室状态</label>
+        <div class="layui-input-block">
+                <select id="status" name="status">
+                    <option value="0">启用</option>
+                    <option value="-1">停用</option>
+                </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="LAY-classroom-front-submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>

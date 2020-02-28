@@ -1,0 +1,132 @@
+<title>teacherClass管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb"/>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-teacherClass-formlist">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">关键字</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="keyword" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-teacherClass-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <table id="LAY-teacherClass-manage" lay-filter="LAY-teacherClass-manage"></table>
+            <script type="text/html" id="list-manage-btn">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+            <script type="text/html" id="table-manage-btn">
+                <a class="layui-btn layui-btn-xs table-manage-btn" lay-event="add">创建</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs table-manage-btn" lay-event="batchdel">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    var select_option_default="<option value=\"\">(被评分的老师)直接选择或搜索选择</option>";
+
+    layui.use('teacherClass', layui.factory('teacherClass')).use(['admin', 'layer', 'teacherClass', 'table'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            view = layui.view,
+            table = layui.table,
+            layer = layui.layer,
+            form = layui.form;
+
+
+
+        form.render(null, 'layadmin-teacherClass-formlist');
+
+        function queryEmployee(url='type=all&size=300'){
+            //查询员工
+            admin.req({
+
+                url:"/employees?"+url,
+                done:function (res) {
+
+                    if(res.data && res.data.length){
+
+                        var options = '';
+                        $.each(res.data,function (i,e) {
+
+                            options += "<option value='" + e.id + "'>" + e.truename + "</option>";
+
+                        });
+                        $("#empId").append(options);
+                        form.render("select","layadmin-estimate-formlist1");
+                        try {
+                            $("#f_teacherId").html("");
+                            $("#f_teacherId").append(select_option_default);
+                            $("#f_teacherId").append(options);
+                            form.render(null,"layadmin-teacherClass-formlist");
+
+                        }catch(e){
+
+                        }
+                        window.employees_all = options;
+                    }
+
+                }
+
+            });
+
+        }
+
+        queryEmployee();
+
+
+
+        //查询学科
+        admin.req({
+
+            url:'/trainsubjects?type=all&size=300',
+            done:function (res) {
+
+                if(res.data && res.data.length){
+
+                    var options = '';
+                    $.each(res.data,function (i,e) {
+
+                        options += "<option value='" + e.id + "'>" + e.name + "</option>";
+
+                    });
+                    $("#subjectId").append(options);
+                    form.render("select","layadmin-estimate-formlist1");
+                    window.subjects = options;
+                }
+
+            }
+
+        });
+
+
+
+        //监听搜索
+        form.on('submit(LAY-teacherClass-front-search)', function (data) {
+            var field = data.field;
+
+            //执行重载
+            table.reload('LAY-teacherClass-manage', {
+                where: field
+            });
+        });
+    });
+</script>

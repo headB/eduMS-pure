@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wolfcode.edums.core.mapper.DepartmentMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.wolfcode.edums.core.domain.Department">
+            <result column="id" property="id" />
+                <result column="sn" property="sn" />
+                <result column="title" property="title" />
+                <result column="intro" property="intro" />
+                <result column="dirpath" property="dirPath" />
+                <result column="tel" property="tel" />
+                <result column="fax" property="fax" />
+                <result column="sequence" property="sequence" />
+                <result column="parent_id" property="parentId" />
+    </resultMap>
+
+    <resultMap id="FullResultMap" type="cn.wolfcode.edums.core.vo.DepartmentVO" extends="BaseResultMap">
+        <result column="parentName" property="parentName"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, sn, title, intro, dirpath, tel, fax, sequence, parent_id
+    </sql>
+    <sql id="Full_Column_List">
+        c.id, c.sn, c.title, c.intro, c.dirpath, c.tel, c.fax, c.sequence, c.parent_id,
+        p.title parentName
+    </sql>
+
+    <select id="pageList" resultMap="FullResultMap">
+        select <include refid="Full_Column_List"/>
+        from t_department c left join t_department p on c.parent_id = p.id
+        <where>
+            <if test="qo.keyword != null">
+                (c.sn like '%' #{qo.keyword} '%' or c.title like '%' #{qo.keyword} '%')
+            </if>
+            <if test="qo.parentId > 0">
+                c.parent_id = #{qo.parentId}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wolfcode.edums.core.mapper.UserinfoMapper">
+
+    <resultMap id="BaseResultMap" type="cn.wolfcode.edums.core.domain.Userinfo">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="email" property="email"/>
+        <result column="password" property="password"/>
+        <result column="registertime" property="registerTime"/>
+        <result column="status" property="status"/>
+        <result column="logintimes" property="loginTimes"/>
+        <result column="lastlogintime" property="lastLoginTime"/>
+        <result column="lastloginip" property="lastLoginIp"/>
+        <result column="problem" property="problem"/>
+        <result column="solution" property="solution"/>
+        <result column="imuin" property="imUin"/>
+        <result column="lastlogouttime" property="lastLogoutTime"/>
+        <result column="enablechangepassword" property="enableChangePassword"/>
+        <result column="passwordexpireddays" property="passwordExpiredDays"/>
+        <result column="passwordchangetime" property="passwordChangeTime"/>
+        <result column="loginatsametime" property="loginAtSameTime"/>
+        <result column="useusb" property="useUsb"/>
+    </resultMap>
+
+</mapper>

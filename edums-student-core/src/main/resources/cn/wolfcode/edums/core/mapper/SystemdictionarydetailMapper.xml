@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wolfcode.edums.core.mapper.SystemdictionarydetailMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.wolfcode.edums.core.domain.SystemDictionaryDetail">
+        <result column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="tvalue" property="tvalue" />
+        <result column="sequence" property="sequence" />
+        <result column="intro" property="intro" />
+        <result column="parent_id" property="parentId" />
+    </resultMap>
+
+    <resultMap id="FullResultMap" type="cn.wolfcode.edums.core.vo.SystemDictionaryDetailVO" extends="BaseResultMap">
+        <result column="parentName" property="parentName"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        sd.id,
+        sd.title, sd.tvalue, sd.sequence, sd.intro, sd.parent_id,
+        s.title parentName
+    </sql>
+
+    <select id="selectByParentSn" resultMap="FullResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_systemdictionarydetail sd
+        left join t_systemdictionary s on sd.parent_id = s.id
+        <where>
+            <if test="sn!=null">
+                s.sn = #{sn}
+            </if>
+        </where>
+        order by sd.sequence asc
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from t_systemdictionarydetail
+    </select>
+</mapper>

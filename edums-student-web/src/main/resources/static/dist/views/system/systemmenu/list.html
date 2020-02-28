@@ -1,0 +1,136 @@
+<title>系统菜单管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb"/>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-systemmenu-formlist">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">关键字</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="keyword" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-submit
+                            lay-filter="LAY-systemmenu-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div class="layui-row">
+                        <div class="layui-col-md3">
+                            <div id="menuTree" class="layui-card">
+
+                            </div>
+                        </div>
+                        <div class="layui-col-md9">
+                            <table id="LAY-systemmenu-manage" lay-filter="LAY-systemmenu-manage"></table>
+                            <script type="text/html" id="systemmenu-list-manage-btn">
+                                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                                        class="layui-icon layui-icon-delete"></i>删除</a>
+                            </script>
+                            <script type="text/html" id="systemmenu-table-manage-btn">
+                                <a class="layui-btn layui-btn-xs table-manage-btn" lay-event="add">创建</a>
+                                <a class="layui-btn layui-btn-danger layui-btn-xs table-manage-btn"
+                                   lay-event="batchdel">删除</a>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    #menuTree {
+        width: 95%;
+        overflow: scroll;
+        padding: 0;
+    }
+</style>
+<script>
+    // 当前选中的菜单
+    var currentMenu;
+    layui.use('systemmenu', layui.factory('systemmenu')).use(['admin', 'layer', 'systemmenu', 'tree', 'table'], function () {
+        var $ = layui.$,
+            admin = layui.admin,
+            view = layui.view,
+            tree = layui.tree,
+            table = layui.table,
+            layer = layui.layer,
+            form = layui.form;
+
+        $("#menuTree").css("height", window.innerHeight - 100);
+
+        form.render(null, 'layadmin-systemmenu-formlist');
+
+        tree.render({
+            id: 'menuTree',
+            elem: '#menuTree',
+            data: getData(),
+            edit: ['update', 'del'],
+            click: function (ele) {
+                currentMenu = ele;
+
+                table.reload("LAY-systemmenu-manage", {
+                    where: {parentId: ele.data["id"]}
+                });
+            },
+            customOperate: true,
+            operate: function(obj) {
+                var type = obj.type; //得到操作类型：add、edit、del
+                var data = obj.data; //得到当前节点的数据
+                var elem = obj.elem; //得到当前节点元素
+
+                console.log(type, data, elem);
+            },
+            onlyIconControl: true
+        });
+
+        //监听搜索
+        form.on('submit(LAY-systemmenu-front-search)', function (data) {
+            var field = data.field;
+
+            //执行重载
+            table.reload('LAY-systemmenu-manage', {
+                where: field
+            });
+        });
+    });
+
+    function getData() {
+        var data = [];
+        layui.$.ajax({
+            url: "/menus",    //后台数据请求地址
+            type: "get",
+            async: false,
+            headers: {'x-auth-token': layui.data(layui.setter.tableName)[layui.setter.request.tokenName]},
+            success: function (resut) {
+                data = resut.data;
+            }
+        });
+        return transfer(data);
+    }
+
+    function transfer(data) {
+        return layui.$.map(data, function (v) {
+            if (v.list && v.list.length > 0) {
+                v.children = transfer(v.list);
+                v.spread = true;
+            }
+            delete v.list;
+            return v;
+        });
+    }
+</script>
